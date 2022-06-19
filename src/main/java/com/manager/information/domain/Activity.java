@@ -1,11 +1,15 @@
 package com.manager.information.domain;
 
-import com.manager.information.ActivityType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.xml.crypto.Data;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Objects;
+
+
 @Entity
 @Table(name = "Activity")
 public class Activity {
@@ -13,6 +17,9 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past(message = "{validation.dob.past}")
+    @NotNull(message = "{validation.dob.NotNull}")
     private LocalDate date;
     @Column(name = "nameOfActivity")
     @Enumerated(EnumType.STRING)
@@ -21,15 +28,16 @@ public class Activity {
     private double amount;
     @Column(name = "comment")
     private String comment;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UserRegistration userRegistration;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User userRegistration;
 
     public Activity() {
+
     }
 
-
-
-    public Activity(LocalDate date, ActivityType nameOfActivity, double amount, String comment, UserRegistration userRegistration) {
+    public Activity(LocalDate date, ActivityType nameOfActivity, double amount, String comment, User userRegistration) {
         this.date = date;
         this.nameOfActivity = nameOfActivity;
         this.amount = amount;
@@ -77,11 +85,41 @@ public class Activity {
         this.comment = comment;
     }
 
-    public UserRegistration getUserRegistration() {
+    public User getUserRegistration() {
         return userRegistration;
     }
 
-    public void setUserRegistration(UserRegistration userRegistration) {
+    public void setUserRegistration(User userRegistration) {
         this.userRegistration = userRegistration;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Activity activity = (Activity) o;
+        return Objects.equals(id, activity.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id=" + id +
+                ", date=" + date +
+                ", nameOfActivity=" + nameOfActivity +
+                ", amount=" + amount +
+                ", comment='" + comment + '\'' +
+                ", userRegistration=" + userRegistration +
+                '}';
+    }
 }
+
+
+
+
+

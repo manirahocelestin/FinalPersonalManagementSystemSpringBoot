@@ -1,0 +1,196 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>List Activity</title>
+
+    <link href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"
+          rel="stylesheet"
+          type="text/css"/>
+    <link crossorigin="anonymous"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+          rel="stylesheet"/>
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+          crossorigin="anonymous" />
+    <script>
+        $(function () {
+            $("#dateEdit").datepicker({dateFormat: "yy-mm-dd"});
+        });
+
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#" th:href="@{/userDashboard}">Dashboard</a>
+    <button aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"
+            class="navbar-toggler"
+            data-target="#navbarNavAltMarkup" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="#" th:href="@{/activityForm}">Activity<span
+                    class="sr-only">(current)</span></a>
+            <!--            <a class="nav-item nav-link" href="#" th:href="@{}">Course</a>-->
+            <!--            <a class="nav-item nav-link" href="#" th:href="@{}">Department </a>-->
+            <li sec:authorize="isAuthenticated()"><a class="nav-item nav-link" th:href="@{/logout}">Logout</a></li>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<div class="container">
+
+    <h3>Activity List</h3>
+
+    <hr/>
+    <a class="btn btn-primary" th:href="@{/activityForm}">Add Activity</a>
+    <br/><br/>
+    <table  class="table table-bordered table-striped" id="studentTable"  >
+
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Date</th>
+            <th>NameOfActivity</th>
+            <th>Amount</th>
+            <th>Comment</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="activity:${activities}">
+            <td th:text="${activity.id}"></td>
+            <td th:text="${activity.date}"></td>
+            <td th:text="${activity.nameOfActivity}"></td>
+            <td th:text="${activity.amount}"></td>
+            <td th:text="${activity.comment}"></td>
+
+
+            <td data-target="editModal"><a class="btn btn-primary" id="editButton"
+                                           th:href="@{/showFormForUpdateStudent/{id} (id=${activity.id})}">Update</a>
+                <a class="btn btn-danger"
+                   th:href="@{/deleteActivity/{id}(id=${activity.id})}">Delete</a>
+
+            </td>
+        </tr>
+        </tbody>
+        <tr>
+            <th>TotalAmount</th>
+            <td></td>
+            <td></td>
+            <td th:text="${totalAmount}"></td>
+
+        </tr>
+
+
+
+    </table>
+</div>
+
+<!--div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" class="needs-validation" th:object="${activity}"  method="POST" th:action="@{/activityRegistration}"
+                      novalidate>
+                    <input type="hidden" field="${id}" name="id" id="idEdit" class="form-control" readonly>
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input class="form-control mb-4 col-4"  id="datepicker" name="date" placeholder="Please enter date" required
+                               type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ActivityType</label>
+                        <div>
+
+            <span th:each="ActivityItem: ${EActivity}">
+                <input type="radio" field="*{nameOfActivity}" th:value="${ActivityItem}" id="nameOfActivityEdit" name="nameOfActivity"/>
+                <label  th:text="${ActivityItem}">ActivityType</label>
+            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount</label>
+                        <input class="form-control mb-4 col-4" id="amountEdit" name="amount" placeholder=" Please enter amount" required
+                               type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Comment</label>
+                        <input class="form-control mb-4 col-4" id="commentEdit" name="comment" placeholder="please enter your comment" required
+                               type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">User</label>
+                        <div class="col-sm-10">
+                            <select field="*{userRegistration}" id="userRegistrationEdit" onchange="onstatechange(this)" class="form-control" name="userRegistration">
+                                <option value="0">Select User</option>
+                                <option th:each="userItem :${users}" th:value="${userItem.id}"
+                                        th:text="${userItem.userName}"></option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<!--CDN LINK FOR DATATABLE-->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+<!--script>
+    $(document).ready(function () {
+        $("#activity").DataTable({
+            'aoColumnDefs': [{
+                'bSortable': false,
+                'aTargets': [-1] /* 1st one, start by the right */
+            }]
+        });
+    })
+</script>
+<script>
+    $('table #editButton').on('click',function(event){
+        event.preventDefault();
+        var href=$(this).attr('href');
+        $.get(href, function(activity,status){
+            $('#datepicker').val(activity.date);
+            $('#nameOfActivityEdit').val(activity.nameOfActivity);
+            $('#amountEdit').val(activity.amount);
+            $('#commentEdit').val(activity.comment);
+            $('#userRegistrationEdit').val(activity.userRegistration);
+        });
+        $('#editModal').modal();
+    });
+</script-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#studentTable").DataTable({
+            'aoColumnDefs': [{
+                'bSortable': false,
+                'aTargets': [-1] /* 1st one, start by the right */
+            }]
+        });
+    })
+</script>
+</body>
+
+</html-->

@@ -1,55 +1,50 @@
-package com.manager.information.implement;
-
-import com.manager.information.ActivityType;
-import com.manager.information.domain.Activity;
-import com.manager.information.domain.TitleType;
-import com.manager.information.domain.UserRegistration;
-import com.manager.information.repository.IActivityRep;
-import com.manager.information.repository.IUserRegistrationRep;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
-import javax.xml.crypto.Data;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-
-@Component
-public class UserRegistrationImplement implements CommandLineRunner {
-    @Autowired
-    private IUserRegistrationRep userRegistrationRep;
-    @Autowired
-    private IActivityRep activityRep;
-
-    public UserRegistrationImplement(IUserRegistrationRep userRegistrationRep, IActivityRep activityRep) {
-        this.userRegistrationRep = userRegistrationRep;
-        this.activityRep = activityRep;
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        UserRegistration user = new UserRegistration("celestin", TitleType.DRIVER,"celestmanai","celestin@gmail.com","kigali");
-        Activity act1 = new Activity(LocalDate.of(2022,04,23), ActivityType.GAZ,5000,"I bought gaz from Russia",user);
-        Activity act2 = new Activity(LocalDate.of(2022,04,22),ActivityType.RESTAURANT,2000,"I have eaten a fancy Restaurant",user);
-
-        activityRep.save(act1);
-        activityRep.save(act2);
-
-
-        UserRegistration user2 = new UserRegistration("karake",TitleType.TOURIST,"kaarakenana","karakenana@gmail.com","rwanda");
-        //user.getActivities().add(act1);
-        //user.getActivities().add(act2);
-
-        //c1.getStudents().add(student1);
-//student1.getCourses().add(c3);
-//courseRep.save(c3);
-        userRegistrationRep.save(user);
-        userRegistrationRep.save(user2);
-
-
-
-        System.out.println("The number of  UserRegistration are  : "+ userRegistrationRep.count());
-        System.out.println("the number of activity are  : " + activityRep.count());
-    }
-}
+//package com.manager.information.implement;
+//
+//import com.manager.information.domain.*;
+//import com.manager.information.repository.IActivityRep;
+//
+//import com.manager.information.repository.UserRepository;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.CommandLineRunner;
+//import org.springframework.stereotype.Component;
+//
+//
+//import java.time.LocalDate;
+//import java.util.Arrays;
+//
+//@Component
+//public class UserRegistrationImplement implements CommandLineRunner {
+//    @Autowired
+//    private UserRepository registrationRep;
+//    @Autowired
+//    private IActivityRep activityRep;
+//    @Override
+//    public void run(String... args) throws Exception {
+////        UserRegistration userRegistration = new UserRegistration("celestin", TitleType.TOURIST,"celestin","celestin@gmail.com","rwanda");
+////        UserRegistration kam = new UserRegistration("kamali",TitleType.DRIVER,"kamali","kama@gmail.com","kigali");
+////        registrationRep.save(userRegistration);
+////        registrationRep.save(kam);
+////        Activity activity = new Activity(LocalDate.of(2022,05,07), ActivityType.RESTAURANT,20000,"I was town",
+////        userRegistration);
+////        Activity activity1 = new Activity(LocalDate.of(2022,05,06),ActivityType.GAZ,7000,"I was in Los Angels",
+////                kam);
+////        activityRep.save(activity);
+////        activityRep.save(activity1);
+//        Role role = new Role("admin");
+//        Role role1 = new Role("user");
+//        User userRegistration1 = new User("celestin", TitleType.TOURIST,"celestin","celestin1@gmail.com","rwanda",Arrays.asList(role));
+//        User kam2 = new User("kamali",TitleType.DRIVER,"kamali","kama2@gmail.com","kigali",Arrays.asList(role1));
+//        registrationRep.save(userRegistration1);
+//        registrationRep.save(kam2);
+//        Activity activity3 = new Activity(LocalDate.of(2022,05,07), ActivityType.RESTAURANT,20000,"I was town",
+//                userRegistration1);
+//        Activity activity4 = new Activity(LocalDate.of(2022,05,06),ActivityType.GAZ,7000,"I was in Los Angels",
+//                kam2);
+//        activityRep.save(activity3);
+//        activityRep.save(activity4);
+//
+//        System.out.println("the number of user are : " +registrationRep.count());
+//        System.out.println("the number of user are : " + activityRep.count());
+//
+//    }
+//}
